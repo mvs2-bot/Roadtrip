@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dachzelt Roadtrip 2026</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 320px;
+        }
+        .info-panel h1 { margin: 0 0 8px 0; font-size: 16px; color: #1A365D; }
+        .info-panel p { margin: 0; font-size: 12px; color: #4A5568; line-height: 1.4; }
+        .legend-item { display: flex; align-items: center; margin-top: 6px; font-size: 11px; }
+        .legend-color { width: 25px; height: 4px; margin-right: 8px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="info-panel">
+    <h1>Dachzelt-Roadtrip 2026</h1>
+    <p>Interaktive Routenkarte für euren Sommerurlaub (18.07. – 26.07.2026).</p>
+    <div class="legend-item"><div class="legend-color" style="border-top: 2px dashed #3182ce; height:0;"></div> Anreise / Heimreise Er (Straubing)</div>
+    <div class="legend-item"><div class="legend-color" style="border-top: 2px dashed #9f7aea; height:0;"></div> Anreise / Heimreise Sie (Wien)</div>
+    <div class="legend-item"><div class="legend-color" style="background: #2f855a; height: 4px;"></div> Gemeinsamer Roadtrip (Schleife)</div>
+</div>
+
+<div id="map"></div>
+
+<script>
+    var map = L.map('map').setView([47.6, 11.8], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    var cities = {
+        "Straubing": [48.88, 12.57, "Startort Er"],
+        "Wien": [48.21, 16.37, "Startort Sie"],
+        "Bregenz": [47.50, 9.74, "Sa, 18.07. - Gro&szlig;es Treffen am Bodensee"],
+        "Glarner Alpen": [47.04, 9.07, "So, 19.07. - Start 2-Tages-Wanderung (Trekkingzelt)"],
+        "Vierwaldst&auml;ttersee": [47.05, 8.31, "Mo, 20.07. - See-Camping & Erholung"],
+        "Berner Oberland": [46.59, 7.90, "Di, 21.07. - Lauterbrunnental & Wasserf&auml;lle"],
+        "Liechtenstein (Malbun)": [47.10, 9.61, "Mi, 22.07. - Ankunft im Bergdorf / Do, 23.07. - F&uuml;rstin-Gina-Weg"],
+        "Rapperswil": [47.23, 8.82, "Do, 23.07. - Historische Rosenstadt am S&uuml;dufer"],
+        "Z&uuml;rich": [47.37, 8.54, "Fr, 24.07. - Urbanes Highlight & Partynacht"],
+        "Innsbruck": [47.26, 11.40, "Sa, 25.07. - Alpines Flair & Urlaubsabschluss"]
+    };
+
+    Object.keys(cities).forEach(function(key) {
+        var marker = L.marker(cities[key].slice(0, 2)).addTo(map);
+        marker.bindPopup("<b>" + key + "</b><br>" + cities[key][2]);
+    });
+
+    L.polyline([cities["Straubing"].slice(0,2), cities["Bregenz"].slice(0,2)], {color: '#3182ce', weight: 3, dashArray: '6,6'}).addTo(map);
+    L.polyline([cities["Wien"].slice(0,2), cities["Bregenz"].slice(0,2)], {color: '#9f7aea', weight: 3, dashArray: '6,6'}).addTo(map);
+
+    var loopPoints = [
+        cities["Bregenz"].slice(0,2),
+        cities["Glarner Alpen"].slice(0,2),
+        cities["Vierwaldst&auml;ttersee"].slice(0,2),
+        cities["Berner Oberland"].slice(0,2),
+        cities["Liechtenstein (Malbun)"].slice(0,2),
+        cities["Rapperswil"].slice(0,2),
+        cities["Z&uuml;rich"].slice(0,2),
+        cities["Innsbruck"].slice(0,2)
+    ];
+    L.polyline(loopPoints, {color: '#2f855a', weight: 4}).addTo(map);
+
+    L.polyline([cities["Innsbruck"].slice(0,2), cities["Straubing"].slice(0,2)], {color: '#3182ce', weight: 2.5, dashArray: '4,6'}).addTo(map);
+    L.polyline([cities["Innsbruck"].slice(0,2), cities["Wien"].slice(0,2)], {color: '#9f7aea', weight: 2.5, dashArray: '4,6'}).addTo(map);
+
+</script>
+</body>
+</html>
