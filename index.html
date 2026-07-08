@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dachzelt Roadtrip 2026 — Aktualisierte Route</title>
+    <title>Dachzelt Roadtrip 2026 — Optimierte Panoramaroute</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -23,7 +23,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             z-index: 1000;
-            max-width: 340px;
+            max-width: 320px;
         }
         .info-panel h1 { margin: 0 0 8px 0; font-size: 16px; color: #1A365D; }
         .info-panel p { margin: 0; font-size: 12px; color: #4A5568; line-height: 1.4; }
@@ -35,61 +35,48 @@
 
 <div class="info-panel">
     <h1>Dachzelt-Roadtrip 2026</h1>
-    <p>Aktualisierte Routenkarte mit F&uuml;rstin-Gina-Weg &amp; Bl&uuml;emlisalph&uuml;tte (18.07. – 26.07.2026).</p>
-    <div class="legend-item"><div class="legend-color" style="border-top: 2px dashed #3182ce; height:0;"></div> Anreise / Heimreise Er (Straubing)</div>
-    <div class="legend-item"><div class="legend-color" style="border-top: 2px dashed #9f7aea; height:0;"></div> Anreise / Heimreise Sie (Wien)</div>
-    <div class="legend-item"><div class="legend-color" style="background: #2f855a; height: 4px;"></div> Gemeinsamer Roadtrip (Schleife)</div>
+    <p>Bereinigter, flüssiger Routenverlauf inklusive Kandersteg &amp; Indianer Klettersteig (18.07. – 26.07.2026).</p>
+    <div class="legend-item"><div class="legend-color" style="border-top: 2px dashed #3182ce; height:0;"></div> Anreise / Heimreise</div>
+    <div class="legend-item"><div class="legend-color" style="background: #2f855a; height: 4px;"></div> Gemeinsame Roadtrip-Route</div>
 </div>
 
 <div id="map"></div>
 
 <script>
-    var map = L.map('map').setView([47.4, 11.2], 7);
+    var map = L.map('map').setView([47.3, 10.2], 8);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    var cities = {
-        "Straubing": [48.88, 12.57, "Startort Er"],
-        "Wien": [48.21, 16.37, "Startort Sie"],
-        "Bregenz": [47.50, 9.74, "Sa, 18.07. - Gro&szlig;es Treffen am Bodensee (Obsthof Leiblachtal)"],
-        "Liechtenstein (Malbun)": [47.10, 9.61, "So, 19.07. - F&uuml;rstin-Gina-Weg (Wanderung &amp; Dachzelt)"],
-        "Berner Oberland": [46.59, 7.90, "Mo, 20.07. - Ankunft &amp; Chillen / Di, 21.07. - Aufstieg Bl&uuml;emlisalph&uuml;tte"],
-        "Bl&uuml;emlisalph&uuml;tte": [46.51, 7.72, "Di, 21.07. - H&uuml;tten&uuml;bernachtung (+1300 hm) / Mi, 22.07. - Abstieg"],
-        "Vierwaldst&auml;ttersee": [47.05, 8.31, "Mi, 22.07. - Erholung &amp; See-Camping nach H&uuml;ttentour"],
-        "Z&uuml;richsee (Rapperswil)": [47.23, 8.82, "Do, 23.07. - Klettersteig-Stopp &amp; See-Stellplatz"],
-        "Z&uuml;rich City": [47.37, 8.54, "Fr, 24.07. - St&auml;dtetrip &amp; Partynacht (Hostel/Hotel)"],
-        "Innsbruck": [47.26, 11.40, "Sa, 25.07. - Alpines Flair &amp; Urlaubsabschluss (Dachzelt)"]
+    var mainStations = {
+        "Bregenz (Bodensee)": [47.50, 9.74, "<b>Sa, 18.07.</b><br>Treffpunkt am Bodensee."],
+        "Malbun (Liechtenstein)": [47.10, 9.61, "<b>So, 19.07.</b><br>Fürstin-Gina-Weg."],
+        "Vierwaldst&auml;ttersee (Buochs)": [47.00, 8.42, "<b>Mo, 20.07.</b><br>See-Camping zur Erholung."],
+        "Kandersteg (Trailhead)": [46.49, 7.64, "<b>Di, 21.07.</b><br>Startpunkt der 2-Tages-Wanderung."],
+        "Bl&uuml;emlisalph&uuml;tte (SAC)": [46.51, 7.72, "<b>Di, 21.07.</b><br>Übernachtung auf 2.840m am Gletscher."],
+        "Braunwald (Klettersteig)": [46.93, 8.99, "<b>Do, 23.07.</b><br>Indianer-Klettersteig (Raum Glarus)."],
+        "Rapperswil (Z&uuml;richsee)": [47.23, 8.82, "<b>Do, 23.07.</b><br>Historische Rosenstadt."],
+        "Z&uuml;rich City": [47.37, 8.54, "<b>Fr, 24.07.</b><br>Partynacht an der Langstrasse."],
+        "Innsbruck Altstadt": [47.26, 11.40, "<b>Sa, 25.07.</b><br>Direkte Rückfahrt, Ausklang im Inntal."]
     };
 
-    Object.keys(cities).forEach(function(key) {
-        var marker = L.marker(cities[key].slice(0, 2)).addTo(map);
-        marker.bindPopup("<b>" + key + "</b><br>" + cities[key][2]);
+    Object.keys(mainStations).forEach(function(key) {
+        L.marker(mainStations[key].slice(0, 2)).addTo(map)
+         .bindPopup("<b>" + key + "</b><br>" + mainStations[key][2]);
     });
 
-    // Anreise
-    L.polyline([cities["Straubing"].slice(0,2), cities["Bregenz"].slice(0,2)], {color: '#3182ce', weight: 3, dashArray: '6,6'}).addTo(map);
-    L.polyline([cities["Wien"].slice(0,2), cities["Bregenz"].slice(0,2)], {color: '#9f7aea', weight: 3, dashArray: '6,6'}).addTo(map);
+    // Halbiertes, bereinigtes Koordinaten-Array (Einheitlich Waldgrün)
+    var detailedRoute = [[47.5, 9.74], [47.472, 9.73], [47.444, 9.72], [47.416, 9.71], [47.388, 9.7], [47.36, 9.69], [47.336, 9.672], [47.312, 9.654], [47.288, 9.636], [47.264, 9.618], [47.24, 9.6], [47.22, 9.584], [47.2, 9.568], [47.18, 9.552], [47.16, 9.536], [47.14, 9.52], [47.138, 9.526], [47.136, 9.532], [47.134, 9.538], [47.132, 9.544], [47.13, 9.55], [47.124, 9.562], [47.118, 9.574], [47.112, 9.586], [47.106, 9.598], [47.1, 9.61], [47.106, 9.598], [47.112, 9.586], [47.118, 9.574], [47.124, 9.562], [47.13, 9.55], [47.132, 9.544], [47.134, 9.538], [47.136, 9.532], [47.138, 9.526], [47.14, 9.52], [47.122, 9.504], [47.104, 9.488], [47.086, 9.472], [47.068, 9.456], [47.05, 9.44], [47.064, 9.416], [47.078, 9.392], [47.092, 9.368], [47.106, 9.344], [47.12, 9.32], [47.118, 9.29], [47.116, 9.26], [47.114, 9.23], [47.112, 9.2], [47.11, 9.17], [47.088, 9.02], [47.066, 8.87], [47.044, 8.72], [47.022, 8.57], [47.0, 8.42], [46.978, 8.384], [46.956, 8.348], [46.934, 8.312], [46.912, 8.276], [46.89, 8.24], [46.862, 8.218], [46.834, 8.196], [46.806, 8.174], [46.778, 8.152], [46.75, 8.13], [46.75, 8.11], [46.75, 8.09], [46.75, 8.07], [46.75, 8.05], [46.75, 8.03], [46.736, 7.996], [46.722, 7.962], [46.708, 7.928], [46.694, 7.894], [46.68, 7.86], [46.642, 7.816], [46.604, 7.772], [46.566, 7.728], [46.528, 7.684], [46.49, 7.64], [46.494, 7.656], [46.498, 7.672], [46.502, 7.688], [46.506, 7.704], [46.51, 7.72], [46.506, 7.704], [46.502, 7.688], [46.498, 7.672], [46.494, 7.656], [46.49, 7.64], [46.528, 7.684], [46.566, 7.728], [46.604, 7.772], [46.642, 7.816], [46.68, 7.86], [46.694, 7.894], [46.708, 7.928], [46.722, 7.962], [46.736, 7.996], [46.75, 8.03], [46.75, 8.05], [46.75, 8.07], [46.75, 8.09], [46.75, 8.11], [46.75, 8.13], [46.8, 8.188], [46.85, 8.246], [46.9, 8.304], [46.95, 8.362], [47.0, 8.42], [46.972, 8.506], [46.944, 8.592], [46.916, 8.678], [46.888, 8.764], [46.86, 8.85], [46.874, 8.878], [46.888, 8.906], [46.902, 8.934], [46.916, 8.962], [46.93, 8.99], [46.966, 9.004], [47.002, 9.018], [47.038, 9.032], [47.074, 9.046], [47.11, 9.06], [47.134, 9.012], [47.158, 8.964], [47.182, 8.916], [47.206, 8.868], [47.23, 8.82], [47.248, 8.772], [47.266, 8.724], [47.284, 8.676], [47.302, 8.628], [47.32, 8.58], [47.33, 8.572], [47.34, 8.564], [47.35, 8.556], [47.36, 8.548], [47.37, 8.54], [47.342, 8.596], [47.314, 8.652], [47.286, 8.708], [47.258, 8.764], [47.23, 8.82], [47.206, 8.868], [47.182, 8.916], [47.158, 8.964], [47.134, 9.012], [47.11, 9.06], [47.112, 9.112], [47.114, 9.164], [47.116, 9.216], [47.118, 9.268], [47.12, 9.32], [47.106, 9.344], [47.092, 9.368], [47.078, 9.392], [47.064, 9.416], [47.05, 9.44], [47.088, 9.472], [47.126, 9.504], [47.164, 9.536], [47.202, 9.568], [47.24, 9.6], [47.218, 9.7], [47.196, 9.8], [47.174, 9.9], [47.152, 10.0], [47.13, 10.1], [47.128, 10.12], [47.126, 10.14], [47.124, 10.16], [47.122, 10.18], [47.12, 10.2], [47.124, 10.272], [47.128, 10.344], [47.132, 10.416], [47.136, 10.488], [47.14, 10.56], [47.164, 10.652], [47.188, 10.744], [47.212, 10.836], [47.236, 10.928], [47.26, 11.02], [47.26, 11.096], [47.26, 11.172], [47.26, 11.248], [47.26, 11.324], [47.26, 11.4]];
 
-    // Hauptroute Schleife
-    var loopPoints = [
-        cities["Bregenz"].slice(0,2),
-        cities["Liechtenstein (Malbun)"].slice(0,2),
-        cities["Berner Oberland"].slice(0,2),
-        cities["Bl&uuml;emlisalph&uuml;tte"].slice(0,2),
-        cities["Berner Oberland"].slice(0,2), 
-        cities["Vierwaldst&auml;ttersee"].slice(0,2),
-        cities["Z&uuml;richsee (Rapperswil)"].slice(0,2),
-        cities["Z&uuml;rich City"].slice(0,2),
-        cities["Innsbruck"].slice(0,2)
-    ];
-    L.polyline(loopPoints, {color: '#2f855a', weight: 4}).addTo(map);
+    L.polyline(detailedRoute, {color: '#2f855a', weight: 4.5, opacity: 0.95}).addTo(map);
 
-    // Heimreise
-    L.polyline([cities["Innsbruck"].slice(0,2), cities["Straubing"].slice(0,2)], {color: '#3182ce', weight: 2.5, dashArray: '4,6'}).addTo(map);
-    L.polyline([cities["Innsbruck"].slice(0,2), cities["Wien"].slice(0,2)], {color: '#9f7aea', weight: 2.5, dashArray: '4,6'}).addTo(map);
+    // Gestrichelte An- & Abreise
+    L.polyline([[48.88, 12.57], [47.50, 9.74]], {color: '#3182ce', weight: 2, dashArray: '6,6'}).addTo(map); 
+    L.polyline([[48.21, 16.37], [47.50, 9.74]], {color: '#9f7aea', weight: 2, dashArray: '6,6'}).addTo(map); 
+    L.polyline([[47.26, 11.40], [48.88, 12.57]], {color: '#3182ce', weight: 2, dashArray: '4,6'}).addTo(map); 
+    L.polyline([[47.26, 11.40], [48.21, 16.37]], {color: '#9f7aea', weight: 2, dashArray: '4,6'}).addTo(map); 
 
 </script>
 </body>
